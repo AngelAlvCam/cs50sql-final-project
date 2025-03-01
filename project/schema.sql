@@ -10,6 +10,7 @@ CREATE TABLE "users" (
 CREATE TABLE "playlists" (
     "id" INTEGER,
     "user_id" INTEGER NOT NULL,
+    "name" TEXT NOT NULL,
     "description" TEXT NOT NULL,
     "created_date" NUMERIC NOT NULL DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY("id"),
