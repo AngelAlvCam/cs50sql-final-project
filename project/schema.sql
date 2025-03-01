@@ -25,14 +25,14 @@ CREATE TABLE "songs" (
     PRIMARY KEY("id")
 );
 
-CREATE TABLE "artist" (
+CREATE TABLE "artists" (
     "id" INTEGER,
     "name" TEXT NOT NULL,
     "description" TEXT NOT NULL,
     PRIMARY KEY("id")
 );
 
-CREATE TABLE "album" (
+CREATE TABLE "albums" (
     "id" INTEGER,
     "name" TEXT NOT NULL,
     "year" NUMERIC NOT NULL,
@@ -49,8 +49,8 @@ CREATE TABLE "follows" (
     "playlist_id" INTEGER NOT NULL,
     UNIQUE("user_id", "playlist_id"),
     PRIMARY KEY("id"),
-    FOREIGN KEY("user_id") REFERENCES "users"("user_id"),
-    FOREIGN KEY("playlist_id") REFERENCES "playlists"("playlist_id")
+    FOREIGN KEY("user_id") REFERENCES "users"("id"),
+    FOREIGN KEY("playlist_id") REFERENCES "playlists"("id")
 );
 
 -- Relation between "playlists" and "songs"
@@ -98,7 +98,7 @@ CREATE TABLE "releases" (
     FOREIGN KEY("album_id") REFERENCES "albums"("id")
 );
 
--- Relation between 
+-- Relation between "albums" and "songs"
 CREATE TABLE "includes" (
     "id" INTEGER,
     "album_id" INTEGER NOT NULL,
