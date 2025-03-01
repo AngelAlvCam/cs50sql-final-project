@@ -35,7 +35,6 @@ CREATE TABLE "artists" (
 CREATE TABLE "albums" (
     "id" INTEGER,
     "name" TEXT NOT NULL,
-    "year" NUMERIC NOT NULL,
     "release_date" NUMERIC NOT NULL,
     PRIMARY KEY("id")
 );
