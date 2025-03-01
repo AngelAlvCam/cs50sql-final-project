@@ -1,3 +1,3 @@
 .mode box
-.mode column
+-- .mode column
 .headers on
