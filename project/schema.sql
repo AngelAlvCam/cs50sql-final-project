@@ -18,23 +18,23 @@ CREATE TABLE "playlists" (
 
 CREATE TABLE "songs" (
     "id" INTEGER,
-    "name" TEXT,
-    "length" NUMERIC,
-    "genre" TEXT,
+    "name" TEXT NOT NULL,
+    "length" NUMERIC NOT NULL,
+    "genre" TEXT NOT NULL,
     PRIMARY KEY("id")
 );
 
 CREATE TABLE "artist" (
     "id" INTEGER,
-    "name" TEXT,
-    "description" TEXT,
+    "name" TEXT NOT NULL,
+    "description" TEXT NOT NULL,
     PRIMARY KEY("id")
 );
 
 CREATE TABLE "album" (
     "id" INTEGER,
-    "name" TEXT,
-    "year" NUMERIC,
-    "release_date" NUMERIC,
+    "name" TEXT NOT NULL,
+    "year" NUMERIC NOT NULL,
+    "release_date" NUMERIC NOT NULL,
     PRIMARY KEY("id")
 );
