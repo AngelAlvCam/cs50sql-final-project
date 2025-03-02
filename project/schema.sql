@@ -102,6 +102,7 @@ CREATE TABLE "includes" (
     "id" INTEGER,
     "album_id" INTEGER NOT NULL,
     "song_id" INTEGER NOT NULL,
+    "track" INTEGER NOT NULL,
     UNIQUE("album_id", "song_id"),
     PRIMARY KEY("id"),
     FOREIGN KEY("album_id") REFERENCES "albums"("id"),
