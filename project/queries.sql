@@ -9,7 +9,7 @@ ORDER BY "followers" DESC, "name";
 SELECT "name", "description", "created_date" 
 FROM "playlists"
 WHERE "user_id" = (
-    SELECT "id" FROM "users" WHERE "username" = "StellarFox"
+    SELECT "id" FROM "users" WHERE "username" = 'StellarFox'
 );
 
 -- Get the artists that a user likes
@@ -27,7 +27,7 @@ JOIN "artists" ON "releases"."artist_id" = "artists"."id"
 WHERE "artists"."name" = 'Linkin Park'; 
 
 -- Get all the songs in "The Matrix Reloaded Soundtrack" with its details
-SELECT "songs"."name", "songs"."length", "songs"."genre", group_concat("artists"."name", ', ') AS "artists"
+SELECT "includes"."track", "songs"."name", "songs"."length", "songs"."genre", group_concat("artists"."name", ', ') AS "artists"
 FROM "songs"
 JOIN "includes" ON "includes"."song_id" = "songs"."id"
 JOIN "albums" ON "includes"."album_id" = "albums"."id"
@@ -35,6 +35,4 @@ JOIN "contributes" ON "contributes"."song_id" = "songs"."id"
 JOIN "artists" ON "contributes"."artist_id" = "artists"."id"
 WHERE "albums"."name" = 'The Matrix Reloaded Soundtrack'
 GROUP BY "songs"."id"
-ORDER BY "artists"."name";
-
--- Get all the songs in '12:00' album
+ORDER BY "includes"."track";
