@@ -57,6 +57,7 @@ CREATE TABLE "contains" (
     "id" INTEGER,
     "playlist_id" INTEGER NOT NULL,
     "song_id" INTEGER NOT NULL,
+    "playlist_order" INTEGER NOT NULL,
     PRIMARY KEY("id"),
     FOREIGN KEY("playlist_id") REFERENCES "playlists"("id"),
     FOREIGN KEY("song_id") REFERENCES "songs"("id")
