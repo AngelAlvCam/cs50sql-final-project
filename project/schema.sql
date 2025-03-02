@@ -118,14 +118,14 @@ FROM "artists"
 JOIN "releases" ON "releases"."artist_id" = "artists"."id"
 JOIN "contributes" ON "contributes"."artist_id" = "artists"."id"
 GROUP BY "name"
-ORDER BY "albums" DESC;
+ORDER BY "albums" DESC, "songs" DESC, "name";
 
 -- Songs per genre in the database
 CREATE VIEW "genre_stats" AS
 SELECT "genre", count(*) AS "songs"
 FROM "songs"
 GROUP BY "genre"
-ORDER BY "songs" DESC;
+ORDER BY "songs" DESC, "genre";
 
 -- List more popular songs (by songs in playlists)
 CREATE VIEW "top_songs" AS
