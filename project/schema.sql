@@ -107,3 +107,39 @@ CREATE TABLE "includes" (
     FOREIGN KEY("album_id") REFERENCES "albums"("id"),
     FOREIGN KEY("song_id") REFERENCES "songs"("id")
 );
+
+-- Useful views
+
+-- View to retrieve how many songs and albums a artist has
+CREATE VIEW "artists_stats" AS
+SELECT "name", count(DISTINCT "releases"."id") AS "albums", count(DISTINCT "contributes"."id") AS "songs"
+FROM "artists"
+JOIN "releases" ON "releases"."artist_id" = "artists"."id"
+JOIN "contributes" ON "contributes"."artist_id" = "artists"."id"
+GROUP BY "name"
+ORDER BY "albums" DESC;
+
+-- Songs per genre in the database
+CREATE VIEW "genre_stats" AS
+SELECT "genre", count(*) AS "songs"
+FROM "songs"
+GROUP BY "genre"
+ORDER BY "songs" DESC;
+
+-- List more popular songs (by songs in playlists)
+CREATE VIEW "top_songs" AS
+SELECT "songs"."name", group_concat(DISTINCT "artists"."name") AS "artists", count(*) AS "in_playlist" 
+FROM "songs"
+JOIN "contains" ON "contains"."song_id" = "songs"."id"
+JOIN "contributes" ON "contributes"."song_id" = "songs"."id"
+JOIN "artists" ON "contributes"."artist_id" = "artists"."id"
+GROUP BY "songs"."name"
+ORDER BY "in_playlist" DESC, "songs"."name";
+
+-- List more popular artists (by followers)
+CREATE VIEW "top_artists" AS
+SELECT "name", count("name") AS "followers"
+FROM "artists"
+JOIN "likes" ON "likes"."artist_id" = "artists"."id"
+GROUP BY "name"
+ORDER BY "followers" DESC, "name";
