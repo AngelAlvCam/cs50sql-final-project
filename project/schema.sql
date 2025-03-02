@@ -145,3 +145,11 @@ FROM "artists"
 JOIN "likes" ON "likes"."artist_id" = "artists"."id"
 GROUP BY "name"
 ORDER BY "followers" DESC, "name";
+
+-- List albums in the database with it's releasers
+CREATE VIEW "albums_and_artists" AS
+SELECT "albums"."name", group_concat("artists"."name") AS "artists", "release_date"
+FROM "albums"
+JOIN "releases" ON "releases"."album_id" = "albums"."id"
+JOIN "artists" ON "releases"."artist_id" = "artists"."id"
+GROUP BY "albums"."name";
