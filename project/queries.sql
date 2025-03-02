@@ -21,6 +21,7 @@ WHERE "artist_id" = 'NULL';
 
 -- Queries
 -- Get the playlists that "StellarFox" follows
+.print "Playlists that the user 'StellarFox' follows"
 SELECT "playlists"."name", "description", "created_date"
 FROM "follows"
 JOIN "playlists" ON "follows"."playlist_id" = "playlists"."id"
@@ -29,6 +30,7 @@ WHERE "follows"."user_id" = (
 );
 
 -- Get the playlists that a user owns
+.print "Playlists that the user 'StellarFox' owns"
 SELECT "name", "description", "created_date" 
 FROM "playlists"
 WHERE "user_id" = (
@@ -36,6 +38,7 @@ WHERE "user_id" = (
 );
 
 -- Get a list of the artists that a user likes 
+.print "Artists that the user 'LunarEcho' likes"
 SELECT "name", "description" 
 FROM "artists"
 JOIN "likes" ON "artists"."id" = "likes"."artist_id"
@@ -43,6 +46,7 @@ JOIN "users" ON "users"."id" = "likes"."user_id"
 WHERE "username" = 'LunarEcho';
 
 -- Get all the albums released by 'Linkin Park'
+.print "Albums released by the artist 'Linkin Park'"
 SELECT "albums"."name", "release_date" 
 FROM "albums"
 JOIN "releases" ON "releases"."album_id" = "albums"."id"
@@ -50,6 +54,7 @@ JOIN "artists" ON "releases"."artist_id" = "artists"."id"
 WHERE "artists"."name" = 'Linkin Park'; 
 
 -- Get all the songs in 'The Matrix Reloaded Sountrack' album with its details
+.print "Songs included in the 'The Matrix Reloaded Soundtrack' album"
 SELECT "includes"."track", "songs"."name", "songs"."length", "songs"."genre", group_concat("artists"."name", ', ') AS "artists"
 FROM "songs"
 JOIN "includes" ON "includes"."song_id" = "songs"."id"
@@ -61,6 +66,7 @@ GROUP BY "songs"."id"
 ORDER BY "includes"."track";
 
 -- Get all the songs in '12:00' album with its details
+.print "Songs included in the '12:00' album"
 SELECT "includes"."track", "songs"."name", "songs"."length", "songs"."genre", group_concat("artists"."name", ', ') AS "artists"
 FROM "songs"
 JOIN "includes" ON "includes"."song_id" = "songs"."id"
@@ -72,6 +78,7 @@ GROUP BY "songs"."id"
 ORDER BY "includes"."track";
 
 -- Get all the songs in 'K-Pop Vibes' playlist
+.print "Songs contained in the 'K-Pop Vibes' playlist"
 SELECT "playlist_order" AS "order", "songs"."name", "length"
 FROM "playlists"
 JOIN "contains" ON "playlists"."id" = "contains"."playlist_id"
