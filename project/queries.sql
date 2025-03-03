@@ -107,4 +107,4 @@ SELECT * FROM "artists_stats" WHERE "artist" = "Linkin Park" ;
 
 -- How many songs in the database are 'K-pop'? 
 .print "Number of 'K-Pop' songs in the database"
-SELECT * FROM "genre_stats" WHERE "genre" = 'K-Pop';
+SELECT * FROM "genre_stats" WHERE "genre" = 'K-pop';
