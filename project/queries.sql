@@ -79,8 +79,24 @@ ORDER BY "includes"."track";
 
 -- Get all the songs in 'K-Pop Vibes' playlist
 .print "Songs contained in the 'K-Pop Vibes' playlist"
-SELECT "playlist_order" AS "order", "songs"."name", "length"
+SELECT "playlist_order" AS "order", "songs"."name", "length", group_concat("artists"."name", ', ') AS "artists"
 FROM "playlists"
-JOIN "contains" ON "playlists"."id" = "contains"."playlist_id"
+JOIN "contains" ON "contains"."playlist_id" = "playlists"."id"
 JOIN "songs" ON "contains"."song_id" = "songs"."id"
-WHERE "playlists"."name" = 'K-Pop Vibes';
+JOIN "contributes" ON "contributes"."song_id" = "songs"."id"
+JOIN "artists" ON "contributes"."artist_id" = "artists"."id"
+WHERE "playlists"."name" = 'K-Pop Vibes'
+GROUP BY "songs"."name"
+ORDER BY "order";
+
+-- Get all the songs in 'Rap Rock Fusion' playlist
+.print "Songs contained in the 'Rap Rock Fusion' playlist"
+SELECT "playlist_order" AS "order", "songs"."name", "length", group_concat("artists"."name", ', ') AS "artists"
+FROM "playlists"
+JOIN "contains" ON "contains"."playlist_id" = "playlists"."id"
+JOIN "songs" ON "contains"."song_id" = "songs"."id"
+JOIN "contributes" ON "contributes"."song_id" = "songs"."id"
+JOIN "artists" ON "contributes"."artist_id" = "artists"."id"
+WHERE "playlists"."name" = 'Rap Rock Fusion'
+GROUP BY "songs"."name"
+ORDER BY "order";
