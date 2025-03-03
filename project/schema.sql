@@ -116,7 +116,7 @@ CREATE TABLE "includes" (
 CREATE VIEW "artists_stats" AS
 SELECT "name", count(DISTINCT "releases"."id") AS "albums", count(DISTINCT "contributes"."id") AS "songs"
 FROM "artists"
-JOIN "releases" ON "releases"."artist_id" = "artists"."id"
+LEFT JOIN "releases" ON "releases"."artist_id" = "artists"."id"
 JOIN "contributes" ON "contributes"."artist_id" = "artists"."id"
 GROUP BY "name"
 ORDER BY "albums" DESC, "songs" DESC, "name";
