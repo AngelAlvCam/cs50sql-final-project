@@ -47,35 +47,35 @@ WHERE "username" = 'LunarEcho';
 
 -- Get all the albums released by 'Linkin Park'
 .print "Albums released by the artist 'Linkin Park'"
-SELECT "albums"."name", "release_date" 
-FROM "albums"
-JOIN "releases" ON "releases"."album_id" = "albums"."id"
-JOIN "artists" ON "releases"."artist_id" = "artists"."id"
-WHERE "artists"."name" = 'Linkin Park'; 
+SELECT "name", "release_date"
+FROM "album_details"
+WHERE "artists" LIKE "%linkin park%";
+
+-- Get all the albums released by 'Twice'
+.print "Albums released by the artist 'Twice'"
+SELECT "name", "release_date"
+FROM "album_details"
+WHERE "artists" LIKE "%twice%";
 
 -- Get all the songs in 'The Matrix Reloaded Sountrack' album with its details
 .print "Songs included in the 'The Matrix Reloaded Soundtrack' album"
-SELECT "includes"."track", "songs"."name", "songs"."length", "songs"."genre", group_concat("artists"."name", ', ') AS "artists"
-FROM "songs"
-JOIN "includes" ON "includes"."song_id" = "songs"."id"
-JOIN "albums" ON "includes"."album_id" = "albums"."id"
-JOIN "contributes" ON "contributes"."song_id" = "songs"."id"
-JOIN "artists" ON "contributes"."artist_id" = "artists"."id"
-WHERE "albums"."name" = 'The Matrix Reloaded Soundtrack'
-GROUP BY "songs"."id"
-ORDER BY "includes"."track";
+SELECT "track", "name", "length", "artists", "genre"
+FROM "song_details"
+WHERE "album" = 'The Matrix Reloaded Soundtrack';
 
 -- Get all the songs in '12:00' album with its details
 .print "Songs included in the '12:00' album"
-SELECT "includes"."track", "songs"."name", "songs"."length", "songs"."genre", group_concat("artists"."name", ', ') AS "artists"
-FROM "songs"
-JOIN "includes" ON "includes"."song_id" = "songs"."id"
-JOIN "albums" ON "includes"."album_id" = "albums"."id"
-JOIN "contributes" ON "contributes"."song_id" = "songs"."id"
-JOIN "artists" ON "contributes"."artist_id" = "artists"."id"
-WHERE "albums"."name" = '12:00'
-GROUP BY "songs"."id"
-ORDER BY "includes"."track";
+SELECT "track", "name", "length", "artists", "genre"
+FROM "song_details"
+WHERE "album" = '12:00';
+
+-- Get the top 10 songs
+.print "Top 10 popular songs"
+SELECT * FROM "songs_ranking" LIMIT 10;
+
+-- Get the top 3 artists by popularity
+.print "Top 5 most followed artists"
+SELECT * FROM "artists_ranking" LIMIT 5;
 
 -- Get all the songs in 'K-Pop Vibes' playlist
 .print "Songs contained in the 'K-Pop Vibes' playlist"
@@ -100,3 +100,11 @@ JOIN "artists" ON "contributes"."artist_id" = "artists"."id"
 WHERE "playlists"."name" = 'Rap Rock Fusion'
 GROUP BY "songs"."name"
 ORDER BY "order";
+
+-- How many songs and albums 'Linkin Park' has in the database? 
+.print "Number of songs and albums that the artist 'Linkin Park' has in the database"
+SELECT * FROM "artists_stats" WHERE "artist" = "Linkin Park" ;
+
+-- How many songs in the database are 'K-pop'? 
+.print "Number of 'K-Pop' songs in the database"
+SELECT * FROM "genre_stats" WHERE "genre" = 'K-Pop';
