@@ -113,7 +113,7 @@ CREATE TABLE "includes" (
 -- Useful views
 -- View to retrieve how many songs and albums a artist has
 CREATE VIEW "artists_stats" AS
-SELECT "name", count(DISTINCT "releases"."id") AS "albums", count(DISTINCT "contributes"."id") AS "songs"
+SELECT "name" AS "artist", count(DISTINCT "releases"."id") AS "albums", count(DISTINCT "contributes"."id") AS "songs"
 FROM "artists"
 LEFT JOIN "releases" ON "releases"."artist_id" = "artists"."id"
 JOIN "contributes" ON "contributes"."artist_id" = "artists"."id"
