@@ -129,7 +129,7 @@ GROUP BY "genre"
 ORDER BY "songs" DESC, "genre";
 
 -- List more popular songs (by songs in playlists)
-CREATE VIEW "top_songs" AS
+CREATE VIEW "songs_ranking" AS
 SELECT "songs"."name", group_concat(DISTINCT "artists"."name") AS "artists", count(DISTINCT "playlists"."name") AS "in_playlists"
 FROM "songs"
 JOIN "contributes" ON "contributes"."song_id" = "songs"."id"
