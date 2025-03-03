@@ -140,7 +140,7 @@ GROUP BY "songs"."name"
 ORDER BY "in_playlists" DESC, "songs"."name", "artists";
 
 -- List artists in descending order of popularity (by followers)
-CREATE VIEW "top_artists" AS
+CREATE VIEW "artists_ranking" AS
 SELECT "name", count("artist_id") AS "followers"
 FROM "artists"
 LEFT JOIN "likes" ON "likes"."artist_id" = "artists"."id"
