@@ -134,8 +134,8 @@ SELECT "songs"."name", group_concat(DISTINCT "artists"."name") AS "artists", cou
 FROM "songs"
 JOIN "contributes" ON "contributes"."song_id" = "songs"."id"
 JOIN "artists" ON "contributes"."artist_id" = "artists"."id"
-JOIN "contains" ON "contains"."song_id" = "songs"."id"
-JOIN "playlists" ON "contains"."playlist_id" = "playlists"."id"
+LEFT JOIN "contains" ON "contains"."song_id" = "songs"."id"
+LEFT JOIN "playlists" ON "contains"."playlist_id" = "playlists"."id"
 GROUP BY "songs"."name"
 ORDER BY "in_playlists" DESC, "songs"."name", "artists";
 
