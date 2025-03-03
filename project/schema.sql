@@ -154,3 +154,14 @@ JOIN "releases" ON "releases"."album_id" = "albums"."id"
 LEFT JOIN "artists" ON "releases"."artist_id" = "artists"."id"
 GROUP BY "albums"."name"
 ORDER BY "release_date", "albums"."name", "artists";
+
+-- List songs in the database 
+CREATE VIEW "song_details" AS
+SELECT "includes"."track", "songs"."name", "songs"."length", "songs"."genre", group_concat("artists"."name", ', ') AS "artists", "albums"."name" AS "album"
+FROM "songs"
+JOIN "includes" ON "includes"."song_id" = "songs"."id"
+JOIN "albums" ON "includes"."album_id" = "albums"."id"
+JOIN "contributes" ON "contributes"."song_id" = "songs"."id"
+JOIN "artists" ON "contributes"."artist_id" = "artists"."id"
+GROUP BY "songs"."name"
+ORDER BY "albums"."name", "includes"."track";
