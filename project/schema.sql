@@ -139,12 +139,12 @@ JOIN "playlists" ON "contains"."playlist_id" = "playlists"."id"
 GROUP BY "songs"."name"
 ORDER BY "in_playlists" DESC, "songs"."name", "artists";
 
--- List more popular artists (by followers)
+-- List artists in descending order of popularity (by followers)
 CREATE VIEW "top_artists" AS
-SELECT "name", count("name") AS "followers"
+SELECT "name", count("artist_id") AS "followers"
 FROM "artists"
-JOIN "likes" ON "likes"."artist_id" = "artists"."id"
-GROUP BY "name"
+LEFT JOIN "likes" ON "likes"."artist_id" = "artists"."id"
+GROUP BY "artists"."id"
 ORDER BY "followers" DESC, "name";
 
 -- List albums in the database with it's releasers
