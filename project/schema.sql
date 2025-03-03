@@ -130,13 +130,14 @@ ORDER BY "songs" DESC, "genre";
 
 -- List more popular songs (by songs in playlists)
 CREATE VIEW "top_songs" AS
-SELECT "songs"."name", group_concat(DISTINCT "artists"."name") AS "artists", count(*) AS "in_playlist" 
+SELECT "songs"."name", group_concat(DISTINCT "artists"."name") AS "artists", count(DISTINCT "playlists"."name") AS "in_playlists"
 FROM "songs"
-JOIN "contains" ON "contains"."song_id" = "songs"."id"
 JOIN "contributes" ON "contributes"."song_id" = "songs"."id"
 JOIN "artists" ON "contributes"."artist_id" = "artists"."id"
+JOIN "contains" ON "contains"."song_id" = "songs"."id"
+JOIN "playlists" ON "contains"."playlist_id" = "playlists"."id"
 GROUP BY "songs"."name"
-ORDER BY "in_playlist" DESC, "songs"."name";
+ORDER BY "in_playlists" DESC, "songs"."name", "artists";
 
 -- List more popular artists (by followers)
 CREATE VIEW "top_artists" AS
