@@ -148,7 +148,7 @@ GROUP BY "artists"."id"
 ORDER BY "followers" DESC, "name";
 
 -- List albums in the database with it's releasers
-CREATE VIEW "albums_and_artists" AS
+CREATE VIEW "album_details" AS
 SELECT "albums"."name", ifnull(group_concat("artists"."name", ', '), 'Various Artists') AS "artists", "release_date"
 FROM "albums"
 JOIN "releases" ON "releases"."album_id" = "albums"."id"
