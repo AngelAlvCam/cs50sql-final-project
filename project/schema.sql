@@ -1,7 +1,7 @@
 -- Entities
 CREATE TABLE "users" (
     "id" INTEGER,
-    "username" TEXT NOT NULL,
+    "username" TEXT NOT NULL UNIQUE,
     "password"  TEXT NOT NULL,
     "join_date" NUMERIC NOT NULL DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY("id")
@@ -13,6 +13,7 @@ CREATE TABLE "playlists" (
     "name" TEXT NOT NULL,
     "description" TEXT NOT NULL,
     "created_date" NUMERIC NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE("user_id", "name")
     PRIMARY KEY("id"),
     FOREIGN KEY("user_id") REFERENCES "users"("id")
 );
@@ -27,7 +28,7 @@ CREATE TABLE "songs" (
 
 CREATE TABLE "artists" (
     "id" INTEGER,
-    "name" TEXT NOT NULL,
+    "name" TEXT NOT NULL UNIQUE,
     "description" TEXT NOT NULL,
     PRIMARY KEY("id")
 );
@@ -40,7 +41,6 @@ CREATE TABLE "albums" (
 );
 
 -- Relations
-
 -- Relation between "users" and "playlists"
 CREATE TABLE "follows" (
     "id" INTEGER,
@@ -111,7 +111,6 @@ CREATE TABLE "includes" (
 );
 
 -- Useful views
-
 -- View to retrieve how many songs and albums a artist has
 CREATE VIEW "artists_stats" AS
 SELECT "name", count(DISTINCT "releases"."id") AS "albums", count(DISTINCT "contributes"."id") AS "songs"
