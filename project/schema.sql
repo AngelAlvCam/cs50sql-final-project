@@ -58,6 +58,8 @@ CREATE TABLE "contains" (
     "playlist_id" INTEGER NOT NULL,
     "song_id" INTEGER NOT NULL,
     "playlist_order" INTEGER NOT NULL,
+    UNIQUE("playlist_id", "song_id"),
+    UNIQUE("playlist_id", "playlist_order"),
     PRIMARY KEY("id"),
     FOREIGN KEY("playlist_id") REFERENCES "playlists"("id"),
     FOREIGN KEY("song_id") REFERENCES "songs"("id")
@@ -105,6 +107,7 @@ CREATE TABLE "includes" (
     "song_id" INTEGER NOT NULL,
     "track" INTEGER NOT NULL,
     UNIQUE("album_id", "song_id"),
+    UNIQUE("album_id", "track"),
     PRIMARY KEY("id"),
     FOREIGN KEY("album_id") REFERENCES "albums"("id"),
     FOREIGN KEY("song_id") REFERENCES "songs"("id")
