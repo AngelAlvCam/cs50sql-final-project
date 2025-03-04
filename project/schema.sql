@@ -2,7 +2,6 @@
 CREATE TABLE "users" (
     "id" INTEGER,
     "username" TEXT NOT NULL UNIQUE,
-    "password"  TEXT NOT NULL,
     "join_date" NUMERIC NOT NULL DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY("id")
 );
