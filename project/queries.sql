@@ -73,7 +73,7 @@ JOIN "contributes" ON "contributes"."song_id" = "songs"."id"
 JOIN "artists" ON "contributes"."artist_id" = "artists"."id"
 WHERE "albums"."name" = 'The Matrix Reloaded Soundtrack'
 GROUP BY "songs"."id"
-ORDER BY "albums"."name", "includes"."track";
+ORDER BY "includes"."track";
 
 -- Get all the songs in '12:00' album with its details
 .print "Songs included in the '12:00' album"
@@ -85,7 +85,7 @@ JOIN "contributes" ON "contributes"."song_id" = "songs"."id"
 JOIN "artists" ON "contributes"."artist_id" = "artists"."id"
 WHERE "albums"."name" = '12:00'
 GROUP BY "songs"."id"
-ORDER BY "albums"."name", "includes"."track";
+ORDER BY "includes"."track";
 
 -- Get the top 10 songs
 .print "Top 10 popular songs"
