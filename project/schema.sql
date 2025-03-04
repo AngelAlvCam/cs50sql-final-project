@@ -116,55 +116,64 @@ CREATE TABLE "includes" (
 -- Useful views
 -- View to retrieve how many songs and albums a artist has
 CREATE VIEW "artists_stats" AS
-SELECT "name" AS "artist", count(DISTINCT "releases"."id") AS "albums", count(DISTINCT "contributes"."id") AS "songs"
+SELECT "artists"."name" AS "artist", ifnull("albums_count", 0) AS "albums", ifnull("songs_count", 0) AS "songs"
 FROM "artists"
-LEFT JOIN "releases" ON "releases"."artist_id" = "artists"."id"
-JOIN "contributes" ON "contributes"."artist_id" = "artists"."id"
-GROUP BY "name"
-ORDER BY "albums" DESC, "songs" DESC, "name";
+LEFT JOIN (
+    SELECT "artist_id", COUNT(DISTINCT "id") AS "albums_count" 
+    FROM "releases" 
+    GROUP BY "artist_id"
+) AS "album_counts" ON "album_counts"."artist_id" = "artists"."id"
+LEFT JOIN (
+    SELECT "artist_id", COUNT(DISTINCT "id") AS "songs_count" 
+    FROM "contributes" 
+    GROUP BY "artist_id"
+) AS "song_counts" ON "song_counts"."artist_id" = "artists"."id"
+ORDER BY "albums" DESC, "songs" DESC, "artist";
 
 -- Songs per genre in the database
+-- CREATE INDEX "songs_genre" ON "songs"("genre");
 CREATE VIEW "genre_stats" AS
-SELECT "genre", count(*) AS "songs"
+SELECT "genre", count("genre") AS "songs"
 FROM "songs"
 GROUP BY "genre"
 ORDER BY "songs" DESC, "genre";
 
 -- List more popular songs (by songs in playlists)
 CREATE VIEW "songs_ranking" AS
-SELECT "songs"."name", group_concat(DISTINCT "artists"."name") AS "artists", count(DISTINCT "playlists"."name") AS "in_playlists"
+SELECT "name", "artists", ifnull("playlists", 0) AS "in_playlists"
 FROM "songs"
-JOIN "contributes" ON "contributes"."song_id" = "songs"."id"
-JOIN "artists" ON "contributes"."artist_id" = "artists"."id"
-LEFT JOIN "contains" ON "contains"."song_id" = "songs"."id"
-LEFT JOIN "playlists" ON "contains"."playlist_id" = "playlists"."id"
-GROUP BY "songs"."name"
-ORDER BY "in_playlists" DESC, "songs"."name", "artists";
+LEFT JOIN (
+    select "song_id", group_concat("artists"."name", ', ') as "artists"
+    from "contributes"
+    join "artists" on "contributes"."artist_id" = "artists"."id"
+    group by "song_id"
+) AS "song_artists" ON "songs"."id" = "song_artists"."song_id"
+LEFT JOIN (
+    SELECT "song_id", count("song_id") AS "playlists"
+    FROM "contains"
+    GROUP BY "song_id"
+) AS "song_playlists" ON "song_artists"."song_id" = "song_playlists"."song_id"
+ORDER BY "in_playlists" DESC, "name", "artists";
 
 -- List artists in descending order of popularity (by followers)
 CREATE VIEW "artists_ranking" AS
-SELECT "name", count("artist_id") AS "followers"
-FROM "artists"
-LEFT JOIN "likes" ON "likes"."artist_id" = "artists"."id"
-GROUP BY "artists"."id"
-ORDER BY "followers" DESC, "name";
-
--- List albums in the database with it's releasers
-CREATE VIEW "album_details" AS
-SELECT "albums"."name", ifnull(group_concat("artists"."name", ', '), 'Various Artists') AS "artists", "release_date"
-FROM "albums"
-JOIN "releases" ON "releases"."album_id" = "albums"."id"
-LEFT JOIN "artists" ON "releases"."artist_id" = "artists"."id"
-GROUP BY "albums"."name"
-ORDER BY "release_date", "albums"."name", "artists";
+SELECT "name", ifnull("likes_count", 0) AS "followers"
+FROM "artists" 
+LEFT JOIN (
+    SELECT "artist_id", count("artist_id") AS "likes_count"
+    FROM "likes"
+    GROUP BY "artist_id"
+) AS "artists_likes" ON "artists"."id" = "artists_likes"."artist_id"
+ORDER BY "followers" DESC;
 
 -- List songs in the database 
 CREATE VIEW "song_details" AS
-SELECT "includes"."track", "songs"."name", "songs"."length", "songs"."genre", group_concat("artists"."name", ', ') AS "artists", "albums"."name" AS "album"
+SELECT "includes"."track", "songs"."name", "songs"."length", "songs"."genre", group_concat("artists"."name", ', ') AS "artists"
 FROM "songs"
 JOIN "includes" ON "includes"."song_id" = "songs"."id"
 JOIN "albums" ON "includes"."album_id" = "albums"."id"
 JOIN "contributes" ON "contributes"."song_id" = "songs"."id"
 JOIN "artists" ON "contributes"."artist_id" = "artists"."id"
-GROUP BY "songs"."name"
+WHERE "albums"."name" = "12:00"
+GROUP BY "songs"."id"
 ORDER BY "albums"."name", "includes"."track";
