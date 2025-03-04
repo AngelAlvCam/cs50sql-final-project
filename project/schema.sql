@@ -81,7 +81,7 @@ CREATE TABLE "contributes" (
     "id" INTEGER,
     "artist_id" INTEGER NOT NULL,
     "song_id" INTEGER NOT NULL,
-    UNIQUE("artist_id", "song_id"),
+    UNIQUE("song_id", "artist_id"),
     PRIMARY KEY("id"),
     FOREIGN KEY("artist_id") REFERENCES "artists"("id"),
     FOREIGN KEY("song_id") REFERENCES "songs"("id")
@@ -113,25 +113,31 @@ CREATE TABLE "includes" (
     FOREIGN KEY("song_id") REFERENCES "songs"("id")
 );
 
+-- Indexes
+CREATE INDEX "songs_genre" ON "songs"("genre");
+CREATE INDEX "contains_song_id" ON "contains"("song_id");
+CREATE INDEX "songs_name" ON "songs"("name");
+CREATE INDEX "likes_artist_id" ON "likes"("artist_id");
+CREATE INDEX "contributes_artist_id" ON "contributes"("artist_id");
+
 -- Useful views
 -- View to retrieve how many songs and albums a artist has
 CREATE VIEW "artists_stats" AS
 SELECT "artists"."name" AS "artist", ifnull("albums_count", 0) AS "albums", ifnull("songs_count", 0) AS "songs"
 FROM "artists"
 LEFT JOIN (
-    SELECT "artist_id", COUNT(DISTINCT "id") AS "albums_count" 
+    SELECT "artist_id", count("artist_id") AS "albums_count" 
     FROM "releases" 
     GROUP BY "artist_id"
 ) AS "album_counts" ON "album_counts"."artist_id" = "artists"."id"
 LEFT JOIN (
-    SELECT "artist_id", COUNT(DISTINCT "id") AS "songs_count" 
+    SELECT "artist_id", count("artist_id") AS "songs_count" 
     FROM "contributes" 
     GROUP BY "artist_id"
 ) AS "song_counts" ON "song_counts"."artist_id" = "artists"."id"
 ORDER BY "albums" DESC, "songs" DESC, "artist";
 
 -- Songs per genre in the database
--- CREATE INDEX "songs_genre" ON "songs"("genre");
 CREATE VIEW "genre_stats" AS
 SELECT "genre", count("genre") AS "songs"
 FROM "songs"
@@ -165,15 +171,3 @@ LEFT JOIN (
     GROUP BY "artist_id"
 ) AS "artists_likes" ON "artists"."id" = "artists_likes"."artist_id"
 ORDER BY "followers" DESC;
-
--- List songs in the database 
-CREATE VIEW "song_details" AS
-SELECT "includes"."track", "songs"."name", "songs"."length", "songs"."genre", group_concat("artists"."name", ', ') AS "artists"
-FROM "songs"
-JOIN "includes" ON "includes"."song_id" = "songs"."id"
-JOIN "albums" ON "includes"."album_id" = "albums"."id"
-JOIN "contributes" ON "contributes"."song_id" = "songs"."id"
-JOIN "artists" ON "contributes"."artist_id" = "artists"."id"
-WHERE "albums"."name" = "12:00"
-GROUP BY "songs"."id"
-ORDER BY "albums"."name", "includes"."track";
