@@ -1,10 +1,11 @@
 -- Insert
 -- Import data from CSV files to the database tables
+-- 'users' data must be imported before 'playlists' due to foreign key constraints
 .import --csv --skip 1 data/albums.csv albums
 .import --csv --skip 1 data/artists.csv artists
+.import --csv --skip 1 data/users.csv users
 .import --csv --skip 1 data/playlists.csv playlists
 .import --csv --skip 1 data/songs.csv songs
-.import --csv --skip 1 data/users.csv users
 
 -- Import data from the CSV to the junction tables in the database
 .import --csv --skip 1 data/contains.csv contains
@@ -18,6 +19,9 @@
 UPDATE "releases"
 SET "artist_id" = NULL
 WHERE "artist_id" = 'NULL';
+
+-- Enforce foreign key constraints after imports
+PRAGMA foreign_keys = ON;
 
 -- Queries
 -- Get the playlists that "StellarFox" follows
