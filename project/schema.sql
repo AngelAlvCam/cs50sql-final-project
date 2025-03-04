@@ -52,6 +52,28 @@ CREATE TABLE "follows" (
     FOREIGN KEY("playlist_id") REFERENCES "playlists"("id")
 );
 
+-- Trigger to automatically 'follow' a playlist created by a user.
+CREATE TRIGGER "follow_own_playlist"
+AFTER INSERT ON "playlists"
+FOR EACH ROW
+BEGIN
+    INSERT INTO "follows" ("user_id", "playlist_id")
+    VALUES (NEW."user_id", "NEW"."id");
+END;
+
+-- Trigger to prevent a user to unfollow its own playlists
+CREATE TRIGGER "unfollow_playlist"
+BEFORE DELETE ON "follows"
+FOR EACH ROW
+WHEN (
+    SELECT "user_id"
+    FROM "playlists"
+    WHERE "id" = OLD."playlist_id"
+) = OLD."user_id"
+BEGIN
+    SELECT raise(abort, 'Cannot unfollow owns playlist');
+END;
+
 -- Relation between "playlists" and "songs"
 CREATE TABLE "contains" (
     "id" INTEGER,
