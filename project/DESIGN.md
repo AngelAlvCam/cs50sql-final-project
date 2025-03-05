@@ -163,6 +163,8 @@ To improve the performance of the possible commons queries in the database, 7 in
 - `likes_artist_id` on the `artist_id` field in the `likes` table. Useful to join with the `artists` table while looking for the artists that a user likes.
 - `contributes_artist_id` on the `artist_id` field in the `contributes` table. Useful to join with the `artists` table while looking for the artists that contributed to a song. 
 
+Besides the indices explicitely mentioned above, the database uses automatic indices which are a result of the `UNIQUE` constraints defined in some of the tables.
+
 ## Limitations
 
 The current version does not allow collaborative playlists (playlists created by multiple users), nor playlists created by artists.
