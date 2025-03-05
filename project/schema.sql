@@ -139,9 +139,9 @@ CREATE INDEX "albums_name" ON "albums"("name");
 CREATE INDEX "playlists_name" ON "playlists"("name");
 CREATE INDEX "songs_genre" ON "songs"("genre");
 CREATE INDEX "contains_song_id" ON "contains"("song_id");
--- CREATE INDEX "songs_name" ON "songs"("name");
+CREATE INDEX "songs_name" ON "songs"("name");
 CREATE INDEX "likes_artist_id" ON "likes"("artist_id");
-CREATE INDEX "contributes_artist_id" ON "contributes"("artist_id");
+-- CREATE INDEX "contributes_artist_id" ON "contributes"("artist_id");
 
 -- Useful views
 -- View to retrieve how many songs and albums a artist has
@@ -167,7 +167,7 @@ FROM "songs"
 JOIN "contributes" ON "contributes"."song_id" = "songs"."id"
 JOIN "artists" ON "contributes"."artist_id" = "artists"."id"
 LEFT JOIN "contains" ON "contains"."song_id" = "songs"."id"
-GROUP BY "songs"."id"
+GROUP BY "songs"."name"
 ORDER BY "in_playlists" DESC, "artists", "songs"."name";
 
 -- List artists in descending order of popularity (by followers)
