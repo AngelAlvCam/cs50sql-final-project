@@ -135,6 +135,8 @@ CREATE TABLE "includes" (
 );
 
 -- Indexes
+CREATE INDEX "albums_name" ON "albums"("name");
+CREATE INDEX "playlists_name" ON "playlists"("name");
 CREATE INDEX "songs_genre" ON "songs"("genre");
 CREATE INDEX "contains_song_id" ON "contains"("song_id");
 CREATE INDEX "songs_name" ON "songs"("name");
