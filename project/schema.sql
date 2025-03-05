@@ -14,7 +14,7 @@ CREATE TABLE "playlists" (
     "created_date" NUMERIC NOT NULL DEFAULT CURRENT_TIMESTAMP,
     UNIQUE("user_id", "name")
     PRIMARY KEY("id"),
-    FOREIGN KEY("user_id") REFERENCES "users"("id")
+    FOREIGN KEY("user_id") REFERENCES "users"("id") ON DELETE CASCADE
 );
 
 CREATE TABLE "songs" (
@@ -47,8 +47,8 @@ CREATE TABLE "follows" (
     "playlist_id" INTEGER NOT NULL,
     UNIQUE("user_id", "playlist_id"),
     PRIMARY KEY("id"),
-    FOREIGN KEY("user_id") REFERENCES "users"("id"),
-    FOREIGN KEY("playlist_id") REFERENCES "playlists"("id")
+    FOREIGN KEY("user_id") REFERENCES "users"("id") ON DELETE CASCADE,
+    FOREIGN KEY("playlist_id") REFERENCES "playlists"("id") ON DELETE CASCADE
 );
 
 -- Trigger to automatically 'follow' a playlist created by a user.
@@ -82,8 +82,8 @@ CREATE TABLE "contains" (
     UNIQUE("playlist_id", "song_id"),
     UNIQUE("playlist_id", "playlist_order"),
     PRIMARY KEY("id"),
-    FOREIGN KEY("playlist_id") REFERENCES "playlists"("id"),
-    FOREIGN KEY("song_id") REFERENCES "songs"("id")
+    FOREIGN KEY("playlist_id") REFERENCES "playlists"("id") ON DELETE CASCADE,
+    FOREIGN KEY("song_id") REFERENCES "songs"("id") ON DELETE CASCADE
 );
 
 -- Relation between "users" and "artists"
@@ -93,8 +93,8 @@ CREATE TABLE "likes" (
     "artist_id" INTEGER NOT NULL,
     UNIQUE("user_id", "artist_id"),
     PRIMARY KEY("id"),
-    FOREIGN KEY("user_id") REFERENCES "users"("id"),
-    FOREIGN KEY("artist_id") REFERENCES "artists"("id")
+    FOREIGN KEY("user_id") REFERENCES "users"("id") ON DELETE CASCADE,
+    FOREIGN KEY("artist_id") REFERENCES "artists"("id") ON DELETE CASCADE
 );
 
 -- Relation between "artists" and "songs"
@@ -104,8 +104,8 @@ CREATE TABLE "contributes" (
     "song_id" INTEGER NOT NULL,
     UNIQUE("song_id", "artist_id"),
     PRIMARY KEY("id"),
-    FOREIGN KEY("artist_id") REFERENCES "artists"("id"),
-    FOREIGN KEY("song_id") REFERENCES "songs"("id")
+    FOREIGN KEY("artist_id") REFERENCES "artists"("id") ON DELETE CASCADE,
+    FOREIGN KEY("song_id") REFERENCES "songs"("id") ON DELETE CASCADE
 );
 
 -- Relation between "artists" and "album"
@@ -117,8 +117,8 @@ CREATE TABLE "releases" (
     "album_id" INTEGER NOT NULL,
     UNIQUE("artist_id", "album_id"),
     PRIMARY KEY("id"),
-    FOREIGN KEY("artist_id") REFERENCES "artists"("id"),
-    FOREIGN KEY("album_id") REFERENCES "albums"("id")
+    FOREIGN KEY("artist_id") REFERENCES "artists"("id") ON DELETE CASCADE,
+    FOREIGN KEY("album_id") REFERENCES "albums"("id") ON DELETE CASCADE
 );
 
 -- Relation between "albums" and "songs"
@@ -130,8 +130,8 @@ CREATE TABLE "includes" (
     UNIQUE("album_id", "song_id"),
     UNIQUE("album_id", "track"),
     PRIMARY KEY("id"),
-    FOREIGN KEY("album_id") REFERENCES "albums"("id"),
-    FOREIGN KEY("song_id") REFERENCES "songs"("id")
+    FOREIGN KEY("album_id") REFERENCES "albums"("id") ON DELETE CASCADE,
+    FOREIGN KEY("song_id") REFERENCES "songs"("id") ON DELETE CASCADE
 );
 
 -- Indexes
