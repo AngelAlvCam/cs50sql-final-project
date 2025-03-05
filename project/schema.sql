@@ -175,5 +175,5 @@ CREATE VIEW "artists_ranking" AS
 SELECT "artists"."name", count("artist_id") AS "followers"
 FROM "artists"
 LEFT JOIN "likes" ON "artists"."id" = "likes"."artist_id"
-GROUP BY "artists"."id"
+GROUP BY "artists"."name"
 ORDER BY "followers" DESC, "artists"."name";
