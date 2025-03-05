@@ -139,26 +139,19 @@ CREATE INDEX "albums_name" ON "albums"("name");
 CREATE INDEX "playlists_name" ON "playlists"("name");
 CREATE INDEX "songs_genre" ON "songs"("genre");
 CREATE INDEX "contains_song_id" ON "contains"("song_id");
-CREATE INDEX "songs_name" ON "songs"("name");
+-- CREATE INDEX "songs_name" ON "songs"("name");
 CREATE INDEX "likes_artist_id" ON "likes"("artist_id");
 CREATE INDEX "contributes_artist_id" ON "contributes"("artist_id");
 
 -- Useful views
 -- View to retrieve how many songs and albums a artist has
 CREATE VIEW "artists_stats" AS
-SELECT "artists"."name" AS "artist", ifnull("albums_count", 0) AS "albums", ifnull("songs_count", 0) AS "songs"
+SELECT "artists"."name" AS "artist", count(DISTINCT "song_id") AS "songs", count(DISTINCT "album_id") AS "albums"
 FROM "artists"
-LEFT JOIN (
-    SELECT "artist_id", count("artist_id") AS "albums_count" 
-    FROM "releases" 
-    GROUP BY "artist_id"
-) AS "album_counts" ON "album_counts"."artist_id" = "artists"."id"
-LEFT JOIN (
-    SELECT "artist_id", count("artist_id") AS "songs_count" 
-    FROM "contributes" 
-    GROUP BY "artist_id"
-) AS "song_counts" ON "song_counts"."artist_id" = "artists"."id"
-ORDER BY "albums" DESC, "songs" DESC, "artist";
+LEFT JOIN "contributes" ON "contributes"."artist_id" = "artists"."id"
+LEFT JOIN "releases" ON "releases"."artist_id" = "artists"."id"
+GROUP BY "artists"."id"
+ORDER BY "albums" DESC, "songs" DESC;
 
 -- Songs per genre in the database
 CREATE VIEW "genre_stats" AS
@@ -169,28 +162,18 @@ ORDER BY "songs" DESC, "genre";
 
 -- List more popular songs (by songs in playlists)
 CREATE VIEW "songs_ranking" AS
-SELECT "name", "artists", ifnull("playlists", 0) AS "in_playlists"
+SELECT "songs"."name", group_concat(DISTINCT "artists"."name") AS "artists", count(DISTINCT "contains"."playlist_id") AS "in_playlists"
 FROM "songs"
-LEFT JOIN (
-    select "song_id", group_concat("artists"."name", ', ') as "artists"
-    from "contributes"
-    join "artists" on "contributes"."artist_id" = "artists"."id"
-    group by "song_id"
-) AS "song_artists" ON "songs"."id" = "song_artists"."song_id"
-LEFT JOIN (
-    SELECT "song_id", count("song_id") AS "playlists"
-    FROM "contains"
-    GROUP BY "song_id"
-) AS "song_playlists" ON "song_artists"."song_id" = "song_playlists"."song_id"
-ORDER BY "in_playlists" DESC, "name", "artists";
+JOIN "contributes" ON "contributes"."song_id" = "songs"."id"
+JOIN "artists" ON "contributes"."artist_id" = "artists"."id"
+LEFT JOIN "contains" ON "contains"."song_id" = "songs"."id"
+GROUP BY "songs"."id"
+ORDER BY "in_playlists" DESC, "artists", "songs"."name";
 
 -- List artists in descending order of popularity (by followers)
 CREATE VIEW "artists_ranking" AS
-SELECT "name", ifnull("likes_count", 0) AS "followers"
-FROM "artists" 
-LEFT JOIN (
-    SELECT "artist_id", count("artist_id") AS "likes_count"
-    FROM "likes"
-    GROUP BY "artist_id"
-) AS "artists_likes" ON "artists"."id" = "artists_likes"."artist_id"
-ORDER BY "followers" DESC;
+SELECT "artists"."name", count("artist_id") AS "followers"
+FROM "artists"
+LEFT JOIN "likes" ON "artists"."id" = "likes"."artist_id"
+GROUP BY "artists"."id"
+ORDER BY "followers" DESC, "artists"."name";
