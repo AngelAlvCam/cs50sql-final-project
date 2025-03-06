@@ -2,7 +2,7 @@
 
 By Angel Alvarado Campos
 
-Video overview: <URL HERE>
+Video overview: https://youtu.be/uCG9fOblKHQ 
 
 ## Scope
 
